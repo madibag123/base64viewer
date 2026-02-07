@@ -1,5 +1,0 @@
-{
-  "name": "Base64 Viz",
-  "description": "A smart, modern Base64 image viewer and converter. Automatically detects image types and fixes missing headers for seamless rendering.",
-  "requestFramePermissions": []
-}
