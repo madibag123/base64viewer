@@ -14,6 +14,11 @@ const fileInput = document.getElementById('fileInput');
 const base64Output = document.getElementById('base64Output');
 const copyBase64Btn = document.getElementById('copyBase64Btn');
 
+// Modal Elements
+const modal = document.getElementById('imageModal');
+const modalImg = document.getElementById('fullImage');
+const closeModal = document.querySelector('.close-modal');
+
 // Auto-focus input on load
 window.addEventListener('DOMContentLoaded', () => {
     base64Input.focus();
@@ -105,6 +110,37 @@ clearBtn.addEventListener('click', () => {
     resetViewer();
     base64Input.focus();
 });
+
+// Modal Logic
+renderedImage.addEventListener('click', () => {
+    if (renderedImage.src) {
+        modal.style.display = "block";
+        modalImg.src = renderedImage.src;
+        // Disable scroll on body
+        document.body.style.overflow = "hidden";
+    }
+});
+
+closeModal.addEventListener('click', () => {
+    closeModalFunc();
+});
+
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        closeModalFunc();
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.style.display === "block") {
+        closeModalFunc();
+    }
+});
+
+function closeModalFunc() {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+}
 
 downloadBtn.addEventListener('click', () => {
     const src = renderedImage.src;
