@@ -14,6 +14,7 @@ A modern, web-based tool to visualize Base64 strings (images and PDFs) and conve
 - **Copy to Clipboard**: One-click copying for both Image URLs and generated Base64 strings.
 - **Privacy Focused**: All processing happens locally in your browser. No data is sent to any server.
 - **Responsive Design**: Works seamlessly on desktop and mobile devices.
+- **Usage Analytics (Optional)**: Supports Google Analytics 4 event tracking.
 
 ## Usage
 
@@ -39,6 +40,14 @@ This project is ready for GitHub Pages.
 2.  Go to Settings > Pages.
 3.  Select the `main` branch as the source.
 4.  Your site will be live!
+
+## Google Analytics Setup
+
+1. Open [script.js](script.js).
+2. Set `GA_MEASUREMENT_ID` to your GA4 Measurement ID (for example, `G-ABC123XYZ9`).
+3. Deploy the site and verify events in GA4 Realtime.
+
+Tracked events include tab switches, successful previews, downloads, full preview opens, and copy actions.
 
 ## Tech Stack
 

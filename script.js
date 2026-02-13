@@ -22,6 +22,8 @@ const modal = document.getElementById("imageModal");
 const modalImg = document.getElementById("fullImage");
 const closeModal = document.querySelector(".close-modal");
 
+const GA_MEASUREMENT_ID = "G-Z972ERVJ0F";
+
 let currentDataUrl = "";
 let currentMimeType = "";
 let activeRenderToken = 0;
@@ -34,6 +36,7 @@ if (window.pdfjsLib) {
 // Auto-focus input on load
 window.addEventListener("DOMContentLoaded", () => {
   base64Input.focus();
+  initializeAnalytics();
 });
 
 // Tab Switching
@@ -47,6 +50,7 @@ tabBtns.forEach((btn) => {
     btn.classList.add("active");
     const tabId = btn.getAttribute("data-tab");
     document.getElementById(tabId).classList.add("active");
+    trackEvent("tab_switch", { tab: tabId });
   });
 });
 
@@ -113,6 +117,10 @@ copyBase64Btn.addEventListener("click", () => {
       setTimeout(() => {
         copyBase64Btn.textContent = originalText;
       }, 2000);
+
+      trackEvent("copy_base64_output", {
+        source: "converter",
+      });
     });
   }
 });
@@ -140,6 +148,9 @@ fullPreviewBtn.addEventListener("click", () => {
     return;
   }
 
+  trackEvent("full_preview_open", {
+    mime_type: currentMimeType,
+  });
   openImageModal(currentDataUrl);
 });
 
@@ -187,6 +198,10 @@ function openPdfInNewTab(dataUrl) {
     setTimeout(() => {
       URL.revokeObjectURL(blobUrl);
     }, 60000);
+
+    trackEvent("full_preview_open", {
+      mime_type: "application/pdf",
+    });
   } catch (error) {
     fileInfo.textContent = "Unable to open full PDF preview";
     console.error("Failed to open PDF preview:", error);
@@ -201,6 +216,10 @@ downloadBtn.addEventListener("click", () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    trackEvent("download_file", {
+      mime_type: currentMimeType,
+    });
   }
 });
 
@@ -212,6 +231,10 @@ copyBtn.addEventListener("click", () => {
       setTimeout(() => {
         copyBtn.textContent = originalText;
       }, 2000);
+
+      trackEvent("copy_data_url", {
+        mime_type: currentMimeType,
+      });
     });
   }
 });
@@ -271,6 +294,10 @@ function renderImage(base64String) {
     renderedImage.style.display = "block";
     const dimensions = `${this.naturalWidth}x${this.naturalHeight}`;
     fileInfo.textContent = `${dimensions} • ~${estimatedSizeKb.toFixed(1)} KB`;
+    trackEvent("preview_success", {
+      mime_type: mimeType,
+      file_kind: "image",
+    });
   };
 
   renderedImage.onerror = function () {
@@ -318,6 +345,11 @@ async function renderPdfToCanvas(dataUrl, estimatedSizeKb, renderToken) {
     const pageLabel =
       pdfDocument.numPages === 1 ? "1 page" : `${pdfDocument.numPages} pages`;
     fileInfo.textContent = `PDF • ${pageLabel} • ~${estimatedSizeKb.toFixed(1)} KB`;
+    trackEvent("preview_success", {
+      mime_type: "application/pdf",
+      file_kind: "pdf",
+      page_count: pdfDocument.numPages,
+    });
   } catch (error) {
     resetViewer();
     fileInfo.textContent = "Invalid or unsupported PDF data";
@@ -476,4 +508,37 @@ function getDownloadName(mimeType) {
   const extension = extensionMap[mimeType] || "bin";
   const baseName = mimeType === "application/pdf" ? "file" : "image";
   return `${baseName}.${extension}`;
+}
+
+function initializeAnalytics() {
+  if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID === "G-XXXXXXXXXX") {
+    return;
+  }
+
+  if (window.gtag) {
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+  document.head.appendChild(script);
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function gtag() {
+    window.dataLayer.push(arguments);
+  };
+
+  window.gtag("js", new Date());
+  window.gtag("config", GA_MEASUREMENT_ID, {
+    anonymize_ip: true,
+  });
+}
+
+function trackEvent(eventName, eventParams = {}) {
+  if (typeof window.gtag !== "function") {
+    return;
+  }
+
+  window.gtag("event", eventName, eventParams);
 }
