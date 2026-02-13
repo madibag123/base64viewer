@@ -8,8 +8,9 @@ A modern, web-based tool to visualize Base64 strings (images and PDFs) and conve
 
 - **Base64 Viewer**: Paste Base64 strings (with or without a data URI prefix) to instantly preview images and PDFs.
 - **Smart Detection**: Automatically detects missing data URI prefixes and infers common image/PDF MIME types.
+- **Reliable PDF Preview**: Uses `pdf.js` (CDN) to render PDF content from Base64 directly in the browser.
 - **Image to Base64**: Drag & drop or upload an image to generate its Base64 string.
-- **Download**: Download the rendered image as a PNG file.
+- **Download**: Download the rendered file with an inferred extension.
 - **Copy to Clipboard**: One-click copying for both Image URLs and generated Base64 strings.
 - **Privacy Focused**: All processing happens locally in your browser. No data is sent to any server.
 - **Responsive Design**: Works seamlessly on desktop and mobile devices.
@@ -44,6 +45,7 @@ This project is ready for GitHub Pages.
 - HTML5
 - CSS3 (Glassmorphism, CSS Variables, Flexbox/Grid)
 - Vanilla JavaScript
+- PDF.js (CDN)
 
 ## License
 

@@ -45,6 +45,9 @@
               <h2>Preview</h2>
               <div class="actions">
                 <span id="fileInfo" class="image-info"></span>
+                <button id="fullPreviewBtn" class="secondary-btn" disabled>
+                  Full Preview
+                </button>
                 <button id="downloadBtn" class="secondary-btn" disabled>
                   Download
                 </button>
@@ -72,7 +75,12 @@
                 <p>Image or PDF will appear here</p>
               </div>
               <img id="renderedImage" src="" alt="Base64 Render" />
-              <iframe id="renderedPdf" title="Base64 PDF Preview"></iframe>
+              <div id="pdfContainer">
+                <canvas
+                  id="renderedPdf"
+                  aria-label="Base64 PDF Preview"
+                ></canvas>
+              </div>
             </div>
           </div>
         </section>
@@ -130,6 +138,11 @@
       <img class="modal-content" id="fullImage" alt="Full preview" />
       <div id="caption"></div>
     </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <script src="script.js"></script>
   </body>
 </html>
